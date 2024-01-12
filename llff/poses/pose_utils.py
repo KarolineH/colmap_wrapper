@@ -4,8 +4,8 @@ import sys
 import imageio
 import skimage.transform
 
-from llff.poses.colmap_wrapper import run_colmap
-import llff.poses.colmap_read_model as read_model
+from .colmap_wrapper import run_colmap
+from . import colmap_read_model as read_model
 
 
 def load_colmap_data(realdir):
