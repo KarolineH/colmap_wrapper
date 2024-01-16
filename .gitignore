@@ -1,2 +1,10 @@
 *.ipynb_checkpoints*
 *.pyc
+
+# Images and videos
+*.jpg
+*.JPG
+*.mov
+*.mjpg
+*.mp4
+*.png

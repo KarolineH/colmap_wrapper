@@ -16,7 +16,7 @@ def load_colmap_data(realdir):
     # cam = camdata[camdata.keys()[0]]
     list_of_keys = list(camdata.keys())
     cam = camdata[list_of_keys[0]]
-    print( 'Cameras', len(cam))
+    #print( 'Cameras', len(cam))
 
     h, w, f = cam.height, cam.width, cam.params[0]
     # w, h, f = factor * w, factor * h, factor * f

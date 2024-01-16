@@ -23,6 +23,9 @@ import subprocess
 def run_colmap(basedir, match_type):
     
     logfile_name = os.path.join(basedir, 'colmap_output.txt')
+    if not os.path.exists(logfile_name):
+        with open(logfile_name, 'w') as new_file:
+            new_file.write('')
     logfile = open(logfile_name, 'w')
     
     feature_extractor_args = [
