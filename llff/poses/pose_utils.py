@@ -256,7 +256,7 @@ def load_data(basedir, factor=None, width=None, height=None, load_imgs=True):
             
             
     
-def gen_poses(basedir, match_type, factors=None):
+def gen_poses(basedir, match_type, model_type='SIMPLE_RADIAL' ,factors=None):
     
     files_needed = ['{}.bin'.format(f) for f in ['cameras', 'images', 'points3D']]
     if os.path.exists(os.path.join(basedir, 'sparse/0')):
@@ -265,7 +265,7 @@ def gen_poses(basedir, match_type, factors=None):
         files_had = []
     if not all([f in files_had for f in files_needed]):
         print( 'Need to run COLMAP' )
-        run_colmap(basedir, match_type)
+        run_colmap(basedir, match_type, model_type)
     else:
         print('Don\'t need to run COLMAP')
         

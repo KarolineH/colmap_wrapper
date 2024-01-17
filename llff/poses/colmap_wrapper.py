@@ -20,7 +20,7 @@ import subprocess
 #     --output_path $DATASET_PATH/sparse
 
 # $ mkdir $DATASET_PATH/dense
-def run_colmap(basedir, match_type):
+def run_colmap(basedir, match_type, cam_model_type='SIMPLE_RADIAL'):
     
     logfile_name = os.path.join(basedir, 'colmap_output.txt')
     if not os.path.exists(logfile_name):
@@ -33,6 +33,7 @@ def run_colmap(basedir, match_type):
             '--database_path', os.path.join(basedir, 'database.db'), 
             '--image_path', os.path.join(basedir, 'images'),
             '--ImageReader.single_camera', '1',
+            '--ImageReader.camera_model', f'{cam_model_type}'
             # '--SiftExtraction.use_gpu', '0',
     ]
     feat_output = ( subprocess.check_output(feature_extractor_args, universal_newlines=True) )
