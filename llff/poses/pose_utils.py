@@ -8,6 +8,28 @@ from .colmap_wrapper import run_colmap
 from . import colmap_read_model as read_model
 
 
+def load_camera_poses(realdir):
+    imagesfile = os.path.join(realdir, 'sparse/0/images.bin')
+    imdata = read_model.read_images_binary(imagesfile)
+    
+    w2c_mats = []
+    bottom = np.array([0,0,0,1.]).reshape([1,4])
+    
+    names = [imdata[k].name for k in imdata]
+    print( 'Images #', len(names))
+    perm = np.argsort(names)
+    for k in imdata:
+        im = imdata[k]
+        R = im.qvec2rotmat()
+        t = im.tvec.reshape([3,1])
+        m = np.concatenate([np.concatenate([R, t], 1), bottom], 0)
+        w2c_mats.append(m)
+    
+    w2c_mats = np.stack(w2c_mats, 0)
+    c2w_mats = np.linalg.inv(w2c_mats) # transformation from camera to world frame, or the same as the pose of the camera in the world frame
+    return c2w_mats
+
+
 def load_colmap_data(realdir):
     
     camerasfile = os.path.join(realdir, 'sparse/0/cameras.bin')
@@ -256,7 +278,7 @@ def load_data(basedir, factor=None, width=None, height=None, load_imgs=True):
             
             
     
-def gen_poses(basedir, match_type, model_type='SIMPLE_RADIAL' ,factors=None):
+def gen_poses(basedir, match_type, model_type='SIMPLE_RADIAL' ,factors=None, force_rerun=False):
     
     files_needed = ['{}.bin'.format(f) for f in ['cameras', 'images', 'points3D']]
     if os.path.exists(os.path.join(basedir, 'sparse/0')):
@@ -265,6 +287,9 @@ def gen_poses(basedir, match_type, model_type='SIMPLE_RADIAL' ,factors=None):
         files_had = []
     if not all([f in files_had for f in files_needed]):
         print( 'Need to run COLMAP' )
+        run_colmap(basedir, match_type, model_type)
+    elif force_rerun:
+        print('Data exists, but forcing COLMAP to run again')
         run_colmap(basedir, match_type, model_type)
     else:
         print('Don\'t need to run COLMAP')
